@@ -70,6 +70,18 @@ def createCodeBlock(matchSchedule):
 
     return outputStr
 
+def createShareableSchedule(matchSchedule):
+    headers = ["Match #", "Red 1", "Red 2", "Red 3", "Blue 1", "Blue 2", "Blue 3"]
+    markdown = "| " + " | ".join(headers) + " |\n"
+    markdown += "| " + " | ".join(["---"] * len(headers)) + " |\n"
+
+    # Add the rows
+    for row in matchSchedule:
+        markdown += "| " + " | ".join(map(str, row)) + " |\n"
+
+    with open("matchSchedule.md", "w") as f:
+        f.write(markdown)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         prog='Match Schedule Generator')
@@ -89,7 +101,7 @@ if __name__ == '__main__':
         generateSchedule(numTeams, args.numRounds)
         prelimSchedule = extractSchedule("matches.txt")
         fullSchedule = replaceTeams(prelimSchedule, teamsList)
-        
+        createShareableSchedule(fullSchedule)
         codeBlock = createCodeBlock(fullSchedule)
         print(codeBlock)
         with open("generateCode.txt", "w") as text_file:
